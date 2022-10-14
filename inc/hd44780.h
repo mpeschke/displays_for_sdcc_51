@@ -34,7 +34,7 @@
 // 1. If the instruction cycle is shorter than 500nS (i.e. you use a crystal of 33.1176Mhz and operate under 1T mode, it would be 30.195nS), the
 // MCU is considered a FAST MCU, and the IO operation would be too fast to control the LCD, so delay-in-trasfer will be enabled automatically
 
-#include <mcs51/8052.h>
+#include <mcs51/8051.h>
 
 #include <stdarg.h>
 #include <stdio.h>

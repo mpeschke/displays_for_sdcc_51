@@ -1,5 +1,5 @@
-#include <mcs51/8052.h> 
-#include "hd44780.h"
+#include <mcs51/8051.h> 
+#include "../inc/hd44780.h"
 
 void main() {
     int i = 32767;
