@@ -46,7 +46,7 @@
 
 // Assume XTAL_FREQ = 11.0592Mhz and using 12T mode, the result would be 1.085uS per instruction
 
-#define XTAL_FREQ 11059200
+#define XTAL_FREQ 22118400
 #define MCU_CYCLE 12
 
 /*------------------------------Select your IO Mode----------------------------------*/
@@ -56,9 +56,9 @@
 
 /*---------------------------Select your connect mode--------------------------------*/
 
-// #define LCD_BUS_4BIT
+#define LCD_BUS_4BIT
 // #define LCD_BUS_8BIT
-#define LCD_BUS_8P
+// #define LCD_BUS_8P
 
 // #define LCD_NO_READ
 
