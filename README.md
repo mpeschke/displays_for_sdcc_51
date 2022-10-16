@@ -33,13 +33,15 @@ All projects in this repository assume:
 >
 > 1. Get your hands on a AVRISP capable of flashing hex files to a AT89S51 microcontroller. There are several tutorials out there, the most popular are the ones using [Arduino](https://www.youtube.com/watch?v=Pdi-q-bamlI).
 >
-> 2. [Connect your microcontroller to the AVRISP](https://www.youtube.com/watch?v=isPWwbw70vc) (watch until 02:47). Read the youtube video description for instructions on resetting the microcontroller in case of errors.
+> 2. [Place the microcontroller on the AVRISP board](https://www.youtube.com/watch?v=isPWwbw70vc) (watch until 02:47). Read the youtube video description for instructions on resetting the microcontroller in case of errors.
 >
-> 2. Edit [lcd1602_at89s51/Makefile](lcd1602_at89s51/Makefile) to have your USB port in the `usb_port` variable.
+> 3. Edit [lcd1602_at89s51/Makefile](lcd1602_at89s51/Makefile) to have your USB port in the `usb_port` variable.
 >
-> 3. cd lcd1602_at89s51/
+> 4. cd lcd1602_at89s51/
 >
-> 4. make
+> 5. make
+>
+> 6. Remove the microcontroller from the AVRISP board and place it in its circuit (see circuit's picture and diagram below)  
 
 The make command will 1) build the source code and 2) flash the HEX file into the microcontroller's flash memory.  
 
