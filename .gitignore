@@ -1,0 +1,11 @@
+lcd1602_at89s51/*.asm
+lcd1602_at89s51/*.lib
+lcd1602_at89s51/*.lst
+lcd1602_at89s51/*.rel
+lcd1602_at89s51/*.sym
+lcd1602_at89s51/*.ihx
+lcd1602_at89s51/*.lk
+lcd1602_at89s51/*.map
+lcd1602_at89s51/*.mem
+lcd1602_at89s51/*.rst
+

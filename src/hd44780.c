@@ -1,4 +1,4 @@
-#include "hd44780.h"
+#include "../inc/hd44780.h"
 
 // Variables
 

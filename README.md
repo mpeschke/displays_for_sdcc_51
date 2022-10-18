@@ -10,42 +10,55 @@ This library provides support for HITACHI HD44780 based character LCDs (0801, 08
 
 + Easy-to-use formattable print function `disp_printf(format, ...)` similar to normal `printf(format, ...)`
 
-> Usage:
->
-> 1. Add both `hd44780.c` and `hd44780.h` to your project
->
-> 2. Modify the configurations accordingly in `hd44780.h`
->
-> 3. Include `hd44780.h` in your main.c
->
-> 4. There are three types of functions operating at different levels. It's recommended to use the high level functions. Look them up at the end of `hd44780.h`
++ Build and deploy automation using make and avrdude with an AVRISP to flash the hex file into the microcontroller.
+
++ Three types of functions operating at different levels. It's recommended to use the high level functions. Look them up at the end of `hd44780.h`
+
 
 This library is designed for SDCC only
 
-See test [examples](examples/)
+# Build and Deploy
 
-## Test with LCD1602
+All projects in this repository assume:  
 
-4bit M68 interface with R/#W
+> 1. Code can be compiled by sdcc into an hex file.
+>
+> 2. Hex file can be flashed to a microcontroller flash memory, if they are supported by avrdude in the [conf/AT89S5x.conf](conf/AT89S5x.conf) file.
 
-![](images/test1602.jpg)
+## Test with LCD1602 and Atmel AT89S51
+
+4bit M68 interface with R/#W in [lcd1602_at89s51](lcd1602_at89s51/)  
+
+> Usage:
+>
+> 1. Get your hands on a AVRISP capable of flashing hex files to a AT89S51 microcontroller. There are several tutorials out there, the most popular are the ones using [Arduino](https://www.youtube.com/watch?v=Pdi-q-bamlI).
+>
+> 2. [Place the microcontroller on the AVRISP board](https://www.youtube.com/watch?v=isPWwbw70vc) (follow instructions until 02:47).  
+>
+> 3. Edit [lcd1602_at89s51/Makefile](lcd1602_at89s51/Makefile) to have your USB port in the `usb_port` variable.
+>
+> 4. From a terminal, run the commands:
+> 
+> 5. cd lcd1602_at89s51/
+>
+> 6. make
+
+The make command will 1) build the source code and 2) flash the HEX file into the microcontroller's flash memory.  
+
+Remove the microcontroller from the AVRISP board and place it in its circuit (see circuit's picture and diagram below)  
+
+![](images/test1602.jpg)  
+
+![](images/test1602_schematic.png)  
 
 ## Test with LCD2004
 
-4bit M68 interface with R/#W
-
-![](images/test2004.jpg)
+N/A, will post an update when I find one of these for testing. You can see the original test in the [original repository](https://github.com/apachiww/hd44780_for_sdcc_51).  
 
 ## Test with Noritake CU20045-UW VFD
 
-8bit M68 interface with R/#W
-
-![](images/vfd2004.jpg)
+N/A, will post an update when I find one of these for testing. You can see the original test in the [original repository](https://github.com/apachiww/hd44780_for_sdcc_51).  
 
 ## Test with PT6314 based VFM202MDAR2 VFD 
 
-> This VFD module was possibly produced by BOE. Actually it's almost identical to [FUTABA M202MD15FA](https://docs.rs-online.com/8cb4/0900766b814aa03e.pdf).
-
-8bit i80 interface with #RD
-
-![](images/vfd2002.jpg)
+N/A, will post an update when I find one of these for testing. You can see the original test in the [original repository](https://github.com/apachiww/hd44780_for_sdcc_51).  
