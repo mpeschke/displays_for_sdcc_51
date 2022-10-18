@@ -1,4 +1,3 @@
-#include <mcs51/8051.h> 
 #include "../inc/hd44780.h"
 
 void main() {
@@ -9,7 +8,15 @@ void main() {
     disp_put_cur(0,0);
     disp_printf("THIS IS LINE 01");
     disp_put_cur(1,0);
-    disp_printf("Int test: %d", i);
-    disp_cur_on();
+    disp_printf("%s      ", "Int test: ");
+    while(i--)
+    {
+        lcd_wait_512t(255);
+        disp_put_cur(1,10);
+        disp_printf("%s", "      ");
+        disp_put_cur(1,10);
+        disp_printf("%d", i);
+    };
+
     while(1);
 }
