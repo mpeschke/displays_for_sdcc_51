@@ -69,18 +69,18 @@
 
 /*----------IO definitions. Change the definitions of IOs below accordingly----------*/
 
-#define IO_RS       P1_0    // The RS pin 
-#define IO_RW_RD    P1_1    // RW pin in m68 mode or RD pin in i80 mode. Notice that usually the RW pin in m68 mode is multiplexed with WR in i80 mode
-#define IO_E_WR     P1_2    // Enable pin in m68 mode or WR pin in i80 mode
+#define IO_RS       P2_5    // The RS pin 
+#define IO_RW_RD    P2_6    // RW pin in m68 mode or RD pin in i80 mode. Notice that usually the RW pin in m68 mode is multiplexed with WR in i80 mode
+#define IO_E_WR     P2_7    // Enable pin in m68 mode or WR pin in i80 mode
 #ifdef  LCD_NO_READ
 #undef  IO_RW_RD
 #endif
 
 #ifdef  LCD_BUS_4BIT
-#define IO_D4   P2_4
-#define IO_D5   P2_5
-#define IO_D6   P2_6
-#define IO_D7   P2_7
+#define IO_D4   P1_0
+#define IO_D5   P1_1
+#define IO_D6   P1_2
+#define IO_D7   P1_3
 #endif
 
 #ifdef  LCD_BUS_8BIT
@@ -138,73 +138,6 @@
 #define DELAY_CMD FN_DELAY_CMD
 #define DELAY_CLR FN_DELAY_CLR
 #endif
-
-// HD44780 SHIFT-JIS KATAKANA characters
-
-#define KN_ST   0xA1        // 。 
-#define KN_LBR  0xA2        // 「
-#define KN_RBR  0xA3        // 」
-#define KN_KM   0xA4        // 、
-#define KN_DOT  0xA5        // ·
-
-#define KN_a    0xA7        // Katakana ァ
-#define KN_i    0xA8        // Katakana ィ
-#define KN_u    0xA9        // Katakana ゥ
-#define KN_e    0xAA        // Katakana ェ
-#define KN_o    0xAB        // Katakana ォ
-#define KN_yu   0xAC        // Katakana ュ
-#define KN_yo   0xAD        // Katakana ョ
-#define KN_tsu  0xAE        // Katakana ッ
-
-#define KN_L    0xB0        // Katakana ー
-#define KN_A    0xB1
-#define KN_I    0xB2
-#define KN_U    0xB3
-#define KN_E    0xB4
-#define KN_O    0xB5
-#define KN_KA   0xB6
-#define KN_KI   0xB7
-#define KN_KU   0xB8
-#define KN_KE   0xB9
-#define KN_KO   0xBA
-#define KN_SA   0xBB
-#define KN_SHI  0xBC
-#define KN_SU   0xBD
-#define KN_SE   0xBE
-#define KN_SO   0xBF
-#define KN_TA   0xC0
-#define KN_CHI  0xC1
-#define KN_TSU  0xC2
-#define KN_TE   0xC3
-#define KN_TO   0xC4
-#define KN_NA   0xC5
-#define KN_NI   0xC6
-#define KN_NU   0xC7
-#define KN_NE   0xC8
-#define KN_NO   0xC9
-#define KN_HA   0xCA
-#define KN_HI   0xCB
-#define KN_FU   0xCC
-#define KN_HE   0xCD
-#define KN_HO   0xCE
-#define KN_MA   0xCF
-#define KN_MI   0xD0
-#define KN_MU   0xD1
-#define KN_ME   0xD2
-#define KN_MO   0xD3
-#define KN_YA   0xD4
-#define KN_YU   0xD5
-#define KN_YO   0xD6
-#define KN_RA   0xD7
-#define KN_RI   0xD8
-#define KN_RU   0xD9
-#define KN_RE   0xDA
-#define KN_RO   0xDB
-#define KN_WA   0xDC
-#define KN_WO   0xA6        // Katakana ヲ
-#define KN_N    0xDD        // Katakana ン
-#define KN_D    0xDE        // Katakana "
-#define KN_C    0xDF        // Katakana °
 
 // Command definitions
 

@@ -1,4 +1,4 @@
-#include "../inc/hd44780.h"
+#include "hd44780_pinbus.h"
 
 // Variables
 
