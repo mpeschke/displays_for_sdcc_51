@@ -1,4 +1,5 @@
 // HITACHI HD44780 LCD driver for 8051 MCUs (SDCC ONLY)
+// The hardware used for this code is actually a circuit module known as LCD 1602A, version 3.0.
 //
 // Author:                  apachiww@github.com
 //
@@ -8,11 +9,7 @@
 //
 // Experimental auto delay calculation for MCUs using different crystals and operating under 1T, 6T and 12T modes, using MACROs
 //
-// Support for compatible VFD variants also available, e.g. Noritake itron CU20045
-//
 // Soft delay will be used when R/#W is not available to check the busy flag
-//
-// To make use of カタカナ characters, just use the definitions below in your char[]
 //
 // The common LCDs support 6 connection modes (Parallel M68 or i80 interface):
 // 4bit-bus:                Use pins D5~D7 only, plus RS for register selection, R/#W for read/write selection and E for data latch (or #WR for write and #RD for read)
@@ -26,9 +23,6 @@
 // 1. Define your connection mode, available options are LCD_BUS_4BIT, LCD_BUS_8BIT or LCD_BUS_8P
 // 2. Define LCD_NO_READ if you do not use the read function, and soft delay will be used instead of waiting for the busy flag
 // 3. Change the definitions of IOs, XTAL_FREQ and MCU_CYCLE accordingly, this will be used in the calculation of delays later
-// 4. Define DISP_TYPE_NORITAKE_CU20045 and light adjust is available for the VFD
-// 5. Finally include this file in main.c
-// 6. Use the funtions to control your LCD 
 
 // NOTE:
 // 1. If the instruction cycle is shorter than 500nS (i.e. you use a crystal of 33.1176Mhz and operate under 1T mode, it would be 30.195nS), the
@@ -42,12 +36,15 @@
 
 /*--------------------------Begin of user defined options----------------------------*/
 
+/*
+    Comments mentioning 'manual' here means the "Atmel's 8051 Microcontrollers Hardware Manual".
+    Number of machine cycles per specific instructions were extracted from Atmel's "Instruction Set - Intel MCS-51".
+*/
+
 /*---------Set your 8051 XTAL Freq (default 12T mode), required for soft delay-------*/
 
-// Assume XTAL_FREQ = 11.0592Mhz and using 12T mode, the result would be 1.085uS per instruction
-
 #define XTAL_FREQ 22118400
-#define MCU_CYCLE 12
+#define MCU_CYCLE 12 // 'Machine Cycle', which is the number of oscillator periods. See manual's section '2.4 CPU Timing'
 
 /*------------------------------Select your IO Mode----------------------------------*/
 
@@ -69,18 +66,20 @@
 
 /*----------IO definitions. Change the definitions of IOs below accordingly----------*/
 
-#define IO_RS       P1_0    // The RS pin 
-#define IO_RW_RD    P1_1    // RW pin in m68 mode or RD pin in i80 mode. Notice that usually the RW pin in m68 mode is multiplexed with WR in i80 mode
-#define IO_E_WR     P1_2    // Enable pin in m68 mode or WR pin in i80 mode
+// We have to use either port 1 or 3, because ports 0 and 2 can't be configured as inputs/outputs when the microcontroller is fetching instructions from external ROM.
+// See manual's chapter 2.6 'Accessing External Memory'.
+#define IO_RS       P1_6    // The RS pin 
+#define IO_RW_RD    P1_5    // RW pin in m68 mode or RD pin in i80 mode. Notice that usually the RW pin in m68 mode is multiplexed with WR in i80 mode
+#define IO_E_WR     P1_4    // Enable pin in m68 mode or WR pin in i80 mode
 #ifdef  LCD_NO_READ
 #undef  IO_RW_RD
 #endif
 
 #ifdef  LCD_BUS_4BIT
-#define IO_D4   P2_4
-#define IO_D5   P2_5
-#define IO_D6   P2_6
-#define IO_D7   P2_7
+#define IO_D4   P1_0
+#define IO_D5   P1_1
+#define IO_D6   P1_2
+#define IO_D7   P1_3
 #endif
 
 #ifdef  LCD_BUS_8BIT
@@ -102,16 +101,73 @@
 
 // Calculate delay cycles
 
+// XTAL_FREQ=22118400 and MCU_CYCLE=12 means a 1-machine-cycle instruction taking ~542 ns to complete.
 #define INST_CYCLE_NS (MCU_CYCLE*(1000000000/XTAL_FREQ))
 
 #if INST_CYCLE_NS > 500
-#define FN_DELAY_PWRON          lcd_wait_512t((15000000/INST_CYCLE_NS)/512 + 1)     // Power on delay
-#define FN_DELAY_CLR            lcd_wait_512t((1520000/INST_CYCLE_NS)/512 + 1)      // Reset or clear delay
-#define FN_DELAY_CMD            lcd_wait_2t((37000/INST_CYCLE_NS)/2 + 1)            // Command execution delay
-#define FN_DELAY_INIT_PHASE1    lcd_wait_512t((4100000/INST_CYCLE_NS)/512 + 1)      // Delay during the 1st phase of init
-#define FN_DELAY_INIT_PHASE2    lcd_wait_2t((100000/INST_CYCLE_NS)/2 + 1)           // Delay during the 2nd phase of init
+
+#define FN_DELAY_PWRON          lcd_wait_512t((15000000/INST_CYCLE_NS)/512 + 1)     // Power on delay                     - uint8_t t = 30.296875 (function delays 53.763 ms, more than the 50 ms recommended by the HD44780U manual)
+#define FN_DELAY_INIT_PHASE1    lcd_wait_512t((4100000/INST_CYCLE_NS)/512 + 1)      // Delay during the 1st phase of init - uint8_t t = 9.0078125 (function delays 16.131 ms, more than the 4.1 ms recommended by the HD44780U manual)
+#define FN_DELAY_INIT_PHASE2    lcd_wait_2t((100000/INST_CYCLE_NS)/2 + 1)           // Delay during the 2nd phase of init - uint8_t t = 201       (function delays  1.008 ms, more than the 100 us recommended by the HD44780U manual)
+
+// Counting the instructions in the _lcd_wait_512t function gives us the following formula, based on a machine cycle of 12 oscillator periods:
+// (12 + t*(12+12+12+24+24) + t*255*(12+12+12+24+24) + 24)/MCU_CYCLE
+
+// ;	../src/hd44780_pinbus.c:765: void lcd_wait_512t(uint8_t t)
+// ;	-----------------------------------------
+// ;	 function lcd_wait_512t
+// ;	-----------------------------------------
+// _lcd_wait_512t:
+// 	mov	r7,dpl      12 oscillator periods
+// ;	../src/hd44780_pinbus.c:768: while(--t) {
+// 00104$:          ( * t)
+// 	mov	a,r7        12 oscillator periods
+// 	dec	a           12 oscillator periods
+// 	mov	r7,a        12 oscillator periods
+// 	jz	00106$      24 oscillator periods
+// ;	../src/hd44780_pinbus.c:769: i = 255;
+// 	mov	r6,#0xff    24 oscillator periods
+// ;	../src/hd44780_pinbus.c:770: while(--i);
+// 00101$:          ( * 255)
+// 	mov	a,r6        12 oscillator periods
+// 	dec	a           12 oscillator periods
+// 	mov	r6,a        12 oscillator periods
+// 	jz	00104$      24 oscillator periods
+// 	sjmp	00101$  24 oscillator periods
+// 00106$:
+// ;	../src/hd44780_pinbus.c:772: return;
+// ;	../src/hd44780_pinbus.c:773: }
+// 	ret             24 oscillator periods
+
+// Example for FN_DELAY_PWRON, t=30:
+// (12 + 30*(84) + 30*255*(84) + 24)/12 = (12 + 2520 + 642600 + 24)/12 = 645156/12 = 53763 53.763 ms
+// Example for FN_DELAY_INIT_PHASE1, t=9:
+// (12 + 9*(84) + 9*255*(84) + 24)/12 = (12 + 756 + 192780 + 24)/12 = 193572/12 = 16131 16.131 ms
+
+// Counting the instructions in the lcd_wait_2t function gives us the following formula, based on a machine cycle of 12 oscillator periods:
+// (12 + t*(12+12+12+24) + 24)/MCU_CYCLE
+
+// ;	../src/hd44780_pinbus.c:759: void lcd_wait_2t(uint8_t t)
+// ;	-----------------------------------------
+// ;	 function lcd_wait_2t
+// ;	-----------------------------------------
+// _lcd_wait_2t:
+// 	mov	r7,dpl      12 oscillator periods
+// ;	../src/hd44780_pinbus.c:761: while(--t);
+// 00101$:
+// 	mov	a,r7        12 oscillator periods
+// 	dec	a           12 oscillator periods
+// 	mov	r7,a        12 oscillator periods
+// 	jnz	00101$      24 oscillator periods
+// ;	../src/hd44780_pinbus.c:762: return;
+// ;	../src/hd44780_pinbus.c:763: }
+// 	ret             24 oscillator periods
+
+// Example for FN_DELAY_INIT_PHASE2, t=201:
+// (12 + 201*(12 + 12 + 12 + 24) + 24)/12 = 12096/12 = 1008 1.008 ms
 
 #else
+
 #define FAST_MCU                                                                    // Enable extra delay when using fast MCU
 #define FN_DELAY_PWRON          lcd_wait_65kt((15000000/INST_CYCLE_NS)/131072 + 1)
 #define FN_DELAY_CLR            lcd_wait_512t((1520000/INST_CYCLE_NS)/512 + 1)
@@ -138,73 +194,6 @@
 #define DELAY_CMD FN_DELAY_CMD
 #define DELAY_CLR FN_DELAY_CLR
 #endif
-
-// HD44780 SHIFT-JIS KATAKANA characters
-
-#define KN_ST   0xA1        // 。 
-#define KN_LBR  0xA2        // 「
-#define KN_RBR  0xA3        // 」
-#define KN_KM   0xA4        // 、
-#define KN_DOT  0xA5        // ·
-
-#define KN_a    0xA7        // Katakana ァ
-#define KN_i    0xA8        // Katakana ィ
-#define KN_u    0xA9        // Katakana ゥ
-#define KN_e    0xAA        // Katakana ェ
-#define KN_o    0xAB        // Katakana ォ
-#define KN_yu   0xAC        // Katakana ュ
-#define KN_yo   0xAD        // Katakana ョ
-#define KN_tsu  0xAE        // Katakana ッ
-
-#define KN_L    0xB0        // Katakana ー
-#define KN_A    0xB1
-#define KN_I    0xB2
-#define KN_U    0xB3
-#define KN_E    0xB4
-#define KN_O    0xB5
-#define KN_KA   0xB6
-#define KN_KI   0xB7
-#define KN_KU   0xB8
-#define KN_KE   0xB9
-#define KN_KO   0xBA
-#define KN_SA   0xBB
-#define KN_SHI  0xBC
-#define KN_SU   0xBD
-#define KN_SE   0xBE
-#define KN_SO   0xBF
-#define KN_TA   0xC0
-#define KN_CHI  0xC1
-#define KN_TSU  0xC2
-#define KN_TE   0xC3
-#define KN_TO   0xC4
-#define KN_NA   0xC5
-#define KN_NI   0xC6
-#define KN_NU   0xC7
-#define KN_NE   0xC8
-#define KN_NO   0xC9
-#define KN_HA   0xCA
-#define KN_HI   0xCB
-#define KN_FU   0xCC
-#define KN_HE   0xCD
-#define KN_HO   0xCE
-#define KN_MA   0xCF
-#define KN_MI   0xD0
-#define KN_MU   0xD1
-#define KN_ME   0xD2
-#define KN_MO   0xD3
-#define KN_YA   0xD4
-#define KN_YU   0xD5
-#define KN_YO   0xD6
-#define KN_RA   0xD7
-#define KN_RI   0xD8
-#define KN_RU   0xD9
-#define KN_RE   0xDA
-#define KN_RO   0xDB
-#define KN_WA   0xDC
-#define KN_WO   0xA6        // Katakana ヲ
-#define KN_N    0xDD        // Katakana ン
-#define KN_D    0xDE        // Katakana "
-#define KN_C    0xDF        // Katakana °
 
 // Command definitions
 
