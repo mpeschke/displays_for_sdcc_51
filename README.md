@@ -86,7 +86,7 @@ Remove the EEPROM from the Flash Programmer and place it in its [circuit](#exter
 
 This circuit visually validates the LCD initialization delay functions. A blinking LED on microcontroller's port P1_5 in a 1 (one) second interval, using a 12 MHz crystal oscillator.  
 
-### Circuit configuration
+### LED Test Circuit configuration
 
 ![](images/lcd1602_led_test_schematic.png)  
 Available at https://upverter.com/design/mpeschke/6ed6139609f5693d/at89s51-hd44780-led-test-ext-eeprom/
@@ -103,4 +103,4 @@ Available at https://upverter.com/design/mpeschke/6ed6139609f5693d/at89s51-hd447
 >
 > 5. Follow your Flash Programmer instructions to flash the [lcd1602_led_test/main_lcd1602.hex](lcd1602_led_test/main_lcd1602.hex) into the EEPROM chip.  
 
-Remove the EEPROM from the Flash Programmer and place it in its circuit.  
+Remove the EEPROM from the Flash Programmer and place it in its [circuit](#led-test-circuit-configuration).  
