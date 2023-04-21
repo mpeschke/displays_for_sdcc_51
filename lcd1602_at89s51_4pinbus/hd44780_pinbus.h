@@ -1,4 +1,5 @@
 // HITACHI HD44780 LCD driver for 8051 MCUs (SDCC ONLY)
+// The hardware used for this code is actually a circuit module known as LCD 1602A, version 3.0.
 //
 // Author:                  apachiww@github.com
 //
@@ -8,11 +9,7 @@
 //
 // Experimental auto delay calculation for MCUs using different crystals and operating under 1T, 6T and 12T modes, using MACROs
 //
-// Support for compatible VFD variants also available, e.g. Noritake itron CU20045
-//
 // Soft delay will be used when R/#W is not available to check the busy flag
-//
-// To make use of カタカナ characters, just use the definitions below in your char[]
 //
 // The common LCDs support 6 connection modes (Parallel M68 or i80 interface):
 // 4bit-bus:                Use pins D5~D7 only, plus RS for register selection, R/#W for read/write selection and E for data latch (or #WR for write and #RD for read)
@@ -26,9 +23,6 @@
 // 1. Define your connection mode, available options are LCD_BUS_4BIT, LCD_BUS_8BIT or LCD_BUS_8P
 // 2. Define LCD_NO_READ if you do not use the read function, and soft delay will be used instead of waiting for the busy flag
 // 3. Change the definitions of IOs, XTAL_FREQ and MCU_CYCLE accordingly, this will be used in the calculation of delays later
-// 4. Define DISP_TYPE_NORITAKE_CU20045 and light adjust is available for the VFD
-// 5. Finally include this file in main.c
-// 6. Use the funtions to control your LCD 
 
 // NOTE:
 // 1. If the instruction cycle is shorter than 500nS (i.e. you use a crystal of 33.1176Mhz and operate under 1T mode, it would be 30.195nS), the
@@ -69,9 +63,9 @@
 
 /*----------IO definitions. Change the definitions of IOs below accordingly----------*/
 
-#define IO_RS       P2_5    // The RS pin 
-#define IO_RW_RD    P2_6    // RW pin in m68 mode or RD pin in i80 mode. Notice that usually the RW pin in m68 mode is multiplexed with WR in i80 mode
-#define IO_E_WR     P2_7    // Enable pin in m68 mode or WR pin in i80 mode
+#define IO_RS       P1_6    // The RS pin 
+#define IO_RW_RD    P1_5    // RW pin in m68 mode or RD pin in i80 mode. Notice that usually the RW pin in m68 mode is multiplexed with WR in i80 mode
+#define IO_E_WR     P1_4    // Enable pin in m68 mode or WR pin in i80 mode
 #ifdef  LCD_NO_READ
 #undef  IO_RW_RD
 #endif
