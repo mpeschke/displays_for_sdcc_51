@@ -1,12 +1,4 @@
-//
-// I2C communication functions using bit-banging
-// I have implemented only what I needed for my project
-// In particular, clock stretching is not implemented
-// Feel free to improve
-//
-
 #include <8051.h>
-
 #include "i2c.h"
 
 // call and ret take 2 us each, add a nop for 5 us total
@@ -88,9 +80,7 @@ void i2cnak() __naked
 }
 
 unsigned char i2csendaddr()
-{
-	return i2csend(ADDR << 1);
-}
+{return i2csend(ADDR << 1);}
 
 unsigned char i2csend(unsigned char data)
 {
@@ -101,18 +91,22 @@ unsigned char i2csend(unsigned char data)
 			SDA = 1;
 		else
 			SDA = 0;
+
 		delay5us();
 		SCL = 1;
 		delay5us();
 		SCL = 0;
+
 		data <<= 1;
 	}
+
 	SDA = 1;
 	delay5us();
 	SCL = 1;
 	i = SDA;
 	delay5us();
 	SCL = 0;
+
 	return i;
 }
 
