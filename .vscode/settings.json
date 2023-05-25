@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "8051.h": "c"
+        "8051.h": "c",
+        "at89x51.h": "c"
     }
 }

@@ -5,13 +5,13 @@ flash_verify: avrdude_flash_verify
 flash_erase: avrdude_flash_erase
 
 sdcc_build_hex: main_lcd1602.c
-	sdcc -c delay.c
+	sdcc -I . -I ../src/ -c ../src/delay.c
 	sdar -rc delay.lib delay.rel
-	sdcc -c i2c.c
+	sdcc -I . -I ../src/ -c ../src/i2c.c
 	sdar -rc i2c.lib i2c.rel
-	sdcc -c lcd1602.c
+	sdcc -I . -I ../src/ -c ../src/lcd1602.c
 	sdar -rc lcd1602.lib lcd1602.rel
-	sdcc main_lcd1602.c delay.lib i2c.lib lcd1602.lib -L delay.lib i2c.lib lcd1602.lib
+	sdcc -I . -I ../src/ main_lcd1602.c delay.lib i2c.lib lcd1602.lib -L delay.lib i2c.lib lcd1602.lib
 	packihx main_lcd1602.ihx > main_lcd1602.hex
 
 # Change here the USB port of your setup.
