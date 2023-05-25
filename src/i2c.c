@@ -21,72 +21,72 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
 
 void i2cinit() __naked
 {
-	SDA = 1;
-	delay_5us();
-	SCL = 1;
-	delay_5us();
-	__asm__("ret");
+    SDA = 1;
+    delay_5us();
+    SCL = 1;
+    delay_5us();
+    __asm__("ret");
 }
 
 void i2cstart() __naked
 {
-	SDA = 0;
-	delay_5us();
-	SCL = 0;
-	delay_5us();
-	__asm__("ret");
+    SDA = 0;
+    delay_5us();
+    SCL = 0;
+    delay_5us();
+    __asm__("ret");
 }
 
 void i2crestart() __naked
 {
-	SDA = 1;
-	delay_5us();
-	SCL = 1;
-	delay_5us();
-	SDA = 0;
-	delay_5us();
-	SCL = 0;
-	delay_5us();
-	__asm__("ret");
+    SDA = 1;
+    delay_5us();
+    SCL = 1;
+    delay_5us();
+    SDA = 0;
+    delay_5us();
+    SCL = 0;
+    delay_5us();
+    __asm__("ret");
 }
 
 void i2cstop() __naked
 {
-	SCL = 0;
-	delay_5us();
-	SDA = 0;
-	delay_5us();
-	SCL = 1;
-	delay_5us();
-	SDA = 1;
-	delay_5us();
-	__asm__("ret");
+    SCL = 0;
+    delay_5us();
+    SDA = 0;
+    delay_5us();
+    SCL = 1;
+    delay_5us();
+    SDA = 1;
+    delay_5us();
+    __asm__("ret");
 }
 
 void i2cack() __naked
 {
-	SDA = 0;
-	delay_5us();
-	SCL = 1;
-	delay_5us();
-	SCL = 0;
-	delay_5us();
-	SDA = 1;
-	delay_5us();
-	__asm__("ret");
+    SDA = 0;
+    delay_5us();
+    SCL = 1;
+    delay_5us();
+    SCL = 0;
+    delay_5us();
+    SDA = 1;
+    delay_5us();
+    __asm__("ret");
 }
 
 void i2cnak() __naked
 {
-	SDA = 1;
-	delay_5us();
-	SCL = 1;
-	delay_5us();
-	SCL = 0;
-	delay_5us();
-	SDA = 1;
-	delay_5us();
-	__asm__("ret");
+    SDA = 1;
+    delay_5us();
+    SCL = 1;
+    delay_5us();
+    SCL = 0;
+    delay_5us();
+    SDA = 1;
+    delay_5us();
+    __asm__("ret");
 }
 
 unsigned char i2csendaddr()
@@ -94,46 +94,46 @@ unsigned char i2csendaddr()
 
 unsigned char i2csend(unsigned char data)
 {
-	unsigned char i;
+    unsigned char i;
 
-	for (i = 0; i < 8; i++) {
-		if (data & 0x80)
-			SDA = 1;
-		else
-			SDA = 0;
+    for (i = 0; i < 8; i++) {
+        if (data & 0x80)
+            SDA = 1;
+        else
+            SDA = 0;
 
-		delay_5us();
-		SCL = 1;
-		delay_5us();
-		SCL = 0;
-		delay_5us();
+        delay_5us();
+        SCL = 1;
+        delay_5us();
+        SCL = 0;
+        delay_5us();
 
-		data <<= 1;
-	}
+        data <<= 1;
+    }
 
-	SDA = 1;
-	delay_5us();
-	SCL = 1;
-	i = SDA;
-	delay_5us();
-	SCL = 0;
-	delay_5us();
+    SDA = 1;
+    delay_5us();
+    SCL = 1;
+    i = SDA;
+    delay_5us();
+    SCL = 0;
+    delay_5us();
 
-	return i;
+    return i;
 }
 
 unsigned char i2cread()
 {
-	unsigned char i;
-	unsigned char data = 0;
+    unsigned char i;
+    unsigned char data = 0;
 
-	for (i = 0; i < 8; i++) {
-		data <<= 1;
-		data |= SDA;
-		SCL = 1;
-		delay_5us();
-		SCL = 0;
-		delay_5us();
-	}
-	return data;
+    for (i = 0; i < 8; i++) {
+        data <<= 1;
+        data |= SDA;
+        SCL = 1;
+        delay_5us();
+        SCL = 0;
+        delay_5us();
+    }
+    return data;
 }

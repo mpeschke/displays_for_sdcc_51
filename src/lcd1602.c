@@ -33,73 +33,73 @@ static unsigned char backlight = 	LCD1602_BACKLIGHT;
 
 static void expanderwrite(unsigned char value)
 {
-	i2cstart();
-	i2csendaddr();
-	i2csend(value | backlight);
-	i2cstop();
+    i2cstart();
+    i2csendaddr();
+    i2csend(value | backlight);
+    i2cstop();
 }
 
 inline void pulseenable(unsigned char value)
 {
-	expanderwrite(value | En);
-	expanderwrite(value | ~En);
+    expanderwrite(value | En);
+    expanderwrite(value | ~En);
 }
 
 static void write4bits(unsigned char value)
 {
-	expanderwrite(value);
-	pulseenable(value);
+    expanderwrite(value);
+    pulseenable(value);
 }
 
 static void command(unsigned char value)
 {
-	write4bits(value & 0xf0);
-	write4bits((value << 4) & 0xf0);
+    write4bits(value & 0xf0);
+    write4bits((value << 4) & 0xf0);
 }
 
 static void data(unsigned char value)
 {
-	write4bits((value & 0xf0) | Rs);
-	write4bits(((value << 4) & 0xf0) | Rs);
+    write4bits((value & 0xf0) | Rs);
+    write4bits(((value << 4) & 0xf0) | Rs);
 }
 
 void lcd1602init()
 {
-	i2cinit();
-	delay_ms(50);
-	expanderwrite(backlight);
-	delay_ms(50);
-	write4bits(0x03 << 4);
-	// > 4.1 ms
-	delay_ms(5);
-	write4bits(0x03 << 4);
-	// > 4.1 ms
-	delay_ms(5);
-	write4bits(0x03 << 4);
-	// > 150 us
-	DELAY_10_TIMES_US(16); // 160 us
-	write4bits(0x02 << 4);
+    i2cinit();
+    delay_ms(50);
+    expanderwrite(backlight);
+    delay_ms(50);
+    write4bits(0x03 << 4);
+    // > 4.1 ms
+    delay_ms(5);
+    write4bits(0x03 << 4);
+    // > 4.1 ms
+    delay_ms(5);
+    write4bits(0x03 << 4);
+    // > 150 us
+    DELAY_10_TIMES_US(16); // 160 us
+    write4bits(0x02 << 4);
 
-	displayfn = LCD1602_4BITMODE | LCD1602_2LINE | LCD1602_5x8DOTS;
-	command(LCD1602_FUNCTIONSET | displayfn);
-	displayctrl = LCD1602_DISPLAYON | LCD1602_CURSOROFF | LCD1602_BLINKOFF;
-	lcd1602displayon();
-	lcd1602clear();
-	displaymode = LCD1602_ENTRYLEFT | LCD1602_ENTRYSHIFTDEC;
-	command(LCD1602_ENTRYMODESET | displaymode);
-	lcd1602home();
+    displayfn = LCD1602_4BITMODE | LCD1602_2LINE | LCD1602_5x8DOTS;
+    command(LCD1602_FUNCTIONSET | displayfn);
+    displayctrl = LCD1602_DISPLAYON | LCD1602_CURSOROFF | LCD1602_BLINKOFF;
+    lcd1602displayon();
+    lcd1602clear();
+    displaymode = LCD1602_ENTRYLEFT | LCD1602_ENTRYSHIFTDEC;
+    command(LCD1602_ENTRYMODESET | displaymode);
+    lcd1602home();
 }
 
 void lcd1602clear()
 {
-	command(LCD1602_CLEARDISPLAY);
-	delay_ms(2);
+    command(LCD1602_CLEARDISPLAY);
+    delay_ms(2);
 }
 
 void lcd1602home()
 {
-	command(LCD1602_RETURNHOME);
-	delay_ms(2);
+    command(LCD1602_RETURNHOME);
+    delay_ms(2);
 }
 
 // hardcoded for 16x2
@@ -108,38 +108,38 @@ void lcd1602setcursor(unsigned char col, unsigned char row)
 
 void lcd1602displayon()
 {
-	displayctrl != LCD1602_DISPLAYON;
-	command(LCD1602_DISPLAYCONTROL | displayctrl);
+    displayctrl != LCD1602_DISPLAYON;
+    command(LCD1602_DISPLAYCONTROL | displayctrl);
 }
 
 void lcd1602displayoff()
 {
-	displayctrl &= ~LCD1602_DISPLAYON;
-	command(LCD1602_DISPLAYCONTROL | displayctrl);
+    displayctrl &= ~LCD1602_DISPLAYON;
+    command(LCD1602_DISPLAYCONTROL | displayctrl);
 }
 
 void lcd1602cursoron()
 {
-	displayctrl |= LCD1602_CURSORON;
-	command(LCD1602_DISPLAYCONTROL | displayctrl);
+    displayctrl |= LCD1602_CURSORON;
+    command(LCD1602_DISPLAYCONTROL | displayctrl);
 }
 
 void lcd1602cursoroff()
 {
-	displayctrl &= ~LCD1602_CURSORON;
-	command(LCD1602_DISPLAYCONTROL | displayctrl);
+    displayctrl &= ~LCD1602_CURSORON;
+    command(LCD1602_DISPLAYCONTROL | displayctrl);
 }
 
 void lcd1602backlighton()
 {
-	backlight = LCD1602_BACKLIGHT;
-	expanderwrite(0);
+    backlight = LCD1602_BACKLIGHT;
+    expanderwrite(0);
 }
 
 void lcd1602backlightoff()
 {
-	backlight = LCD1602_NOBACKLIGHT;
-	expanderwrite(0);
+    backlight = LCD1602_NOBACKLIGHT;
+    expanderwrite(0);
 }
 
 void lcd1602write(unsigned char value)
@@ -147,9 +147,9 @@ void lcd1602write(unsigned char value)
 
 void lcd1602writestring(unsigned char str[])
 {
-	unsigned int i = 0;
+    unsigned int i = 0;
 
-	while (str[i] != '\0')
+    while (str[i] != '\0')
     {
         data(str[i]);
         i++;

@@ -34,7 +34,7 @@ void delay_x10_cycles(uint8_t x10cycles)        // 2 cycles (lcall)
            nop                                  // 1 cycle   //--> 1+2*3+1 = 8 cycles. //
            djnz r7,loop_delay_x10_cycles        // 2 cycles                            // --> 8 + 2 = 10 cycles.
     end_delay_x10_cycles:                       // ---------------------------------------------
-	__endasm;
+        __endasm;
 }                                               // 2 cycles (ret)
 
 // ----------------------------------------------------------------
@@ -56,7 +56,7 @@ void delay_x100_cycles(uint8_t x100cycles)      // 2 cycles (lcall)
            nop                                  // 1 cycle   //--> 1+2*48+1 = 98 cycles//
            djnz r7,loop_delay_x100_cycles       // 2 cycles                            // --> 98 + 2 = 100 cycles
     end_delay_x100_cycles:                      // ---------------------------------------------
-	__endasm;
+        __endasm;
                                                 // 2 cycles (ret)
 }
 
