@@ -82,6 +82,30 @@ Available at https://upverter.com/design/mpeschke/917442ed3dc5514a/at89s51-hd447
 
 Remove the EEPROM from the Flash Programmer and place it in its [circuit](#external-eeprom-4-bit-circuit-configuration).  
 
+## [lcd1602_at89s51_i2c](lcd1602_at89s51_i2c)
+
+This circuit is an example of LCD 1602A I2C interface, but code is accessed from an external EEPROM.  
+
+### External EEPROM I2C Circuit Configuration
+
+![](images/lcd1602_at89s51_i2c.jpg)  
+![](images/lcd1602_at89s51_i2c_schematic.png)  
+Available at https://upverter.com/design/mpeschke/b59b54c142cb2a9b/at89s51-hd44780-i2c/   
+
+> Usage:
+>
+> 1. Get your hands on a Flash Programmer. The Batronix Barlino II was used for this project.  
+>
+> 2. From a terminal, run the commands:
+> 
+> 3. cd [lcd1602_at89s51_i2c](lcd1602_at89s51_i2c/)
+>
+> 4. make build_hex
+>
+> 5. Follow your Flash Programmer instructions to flash the [lcd1602_at89s51_i2c/main_lcd1602.hex](lcd1602_at89s51_i2c/main_lcd1602.hex) into the EEPROM chip.  
+
+Remove the EEPROM from the Flash Programmer and place it in its [circuit](#external-eeprom-i2c-circuit-configuration).  
+
 ## [lcd1602_led_test](lcd1602_led_test)
 
 This circuit visually validates the LCD initialization delay functions. A blinking LED on microcontroller's port P1_5 in a 1 (one) second interval, using a 12 MHz crystal oscillator.  
