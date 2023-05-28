@@ -89,7 +89,7 @@ This circuit is an example of LCD 1602A I2C interface, but code is accessed from
 ### External EEPROM I2C Circuit Configuration
 
 ![](images/lcd1602_at89s51_i2c.jpg)  
-![](images/lcd1602_at89s51_i2c_schematic.png)  
+![](images/lcd1602_at89s51_i2c_schematic.jpg)  
 Available at https://upverter.com/design/mpeschke/b59b54c142cb2a9b/at89s51-hd44780-i2c/   
 
 > Usage:
