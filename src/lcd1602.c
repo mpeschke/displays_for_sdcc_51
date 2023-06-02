@@ -22,14 +22,15 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
 
 // TODO: Implement parameters for displayfn, displayctrl, displaymode
 // TODO: Implement delays during R/W for fast crystal oscillators (see src/hd44780_pinbus.c)
+// TODO: rename this file (and all references) to hd44780_i2c_pcf8574a.c.
 
 #define COLS 16
 #define ROWS 2
 
-static unsigned char displayfn = 	LCD1602_4BITMODE 	| LCD1602_1LINE 	| LCD1602_5x8DOTS;
-static unsigned char displayctrl = 	LCD1602_DISPLAYON 	| LCD1602_CURSOROFF | LCD1602_BLINKOFF;
-static unsigned char displaymode = 	LCD1602_ENTRYLEFT 	| LCD1602_ENTRYSHIFTDEC;
-static unsigned char backlight = 	LCD1602_BACKLIGHT;
+static unsigned char displayfn =    LCD1602_4BITMODE    | LCD1602_1LINE     | LCD1602_5x8DOTS;
+static unsigned char displayctrl =  LCD1602_DISPLAYON   | LCD1602_CURSOROFF | LCD1602_BLINKOFF;
+static unsigned char displaymode =  LCD1602_ENTRYLEFT   | LCD1602_ENTRYSHIFTDEC;
+static unsigned char backlight =    LCD1602_BACKLIGHT;
 
 static void expanderwrite(unsigned char value)
 {
