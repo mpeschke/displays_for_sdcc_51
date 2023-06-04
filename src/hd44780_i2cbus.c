@@ -17,26 +17,21 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
 */
 #include <8051.h>
 #include "delay.h"
-#include "lcd1602.h"
+#include "hd44780_i2cbus.h"
 #include "i2c.h"
 
-// TODO: Implement parameters for displayfn, displayctrl, displaymode
 // TODO: Implement delays during R/W for fast crystal oscillators (see src/hd44780_pinbus.c)
-// TODO: rename this file (and all references) to hd44780_i2c_pcf8574a.c.
 
-#define COLS 16
-#define ROWS 2
-
-static unsigned char displayfn =    LCD1602_4BITMODE    | LCD1602_1LINE     | LCD1602_5x8DOTS;
-static unsigned char displayctrl =  LCD1602_DISPLAYON   | LCD1602_CURSOROFF | LCD1602_BLINKOFF;
-static unsigned char displaymode =  LCD1602_ENTRYLEFT   | LCD1602_ENTRYSHIFTDEC;
-static unsigned char backlight =    LCD1602_BACKLIGHT;
+static unsigned char _displayfn =    LCD1602_4BITMODE    | LCD1602_1LINE     | LCD1602_5x8DOTS;
+static unsigned char _displayctrl =  LCD1602_DISPLAYON   | LCD1602_CURSOROFF | LCD1602_BLINKOFF;
+static unsigned char _displaymode =  LCD1602_ENTRYLEFT   | LCD1602_ENTRYSHIFTDEC;
+static unsigned char _backlight =    LCD1602_BACKLIGHT;
 
 static void expanderwrite(unsigned char value)
 {
     i2cstart();
     i2csendaddr();
-    i2csend(value | backlight);
+    i2csend(value | _backlight);
     i2cstop();
 }
 
@@ -64,11 +59,21 @@ static void data(unsigned char value)
     write4bits(((value << 4) & 0xf0) | Rs);
 }
 
-void lcd1602init()
+void lcdinit(
+    unsigned char displayfn,
+    unsigned char displayctrl,
+    unsigned char displaymode,
+    unsigned char backlight
+    )
 {
+    _displayfn = displayfn;
+    _displayctrl = displayctrl;
+    _displaymode = displaymode;
+    _backlight = backlight;
+
     i2cinit();
     delay_ms(50);
-    expanderwrite(backlight);
+    expanderwrite(_backlight);
     delay_ms(50);
     write4bits(0x03 << 4);
     // > 4.1 ms
@@ -81,72 +86,87 @@ void lcd1602init()
     DELAY_10_TIMES_US(16); // 160 us
     write4bits(0x02 << 4);
 
-    displayfn = LCD1602_4BITMODE | LCD1602_2LINE | LCD1602_5x8DOTS;
-    command(LCD1602_FUNCTIONSET | displayfn);
-    displayctrl = LCD1602_DISPLAYON | LCD1602_CURSOROFF | LCD1602_BLINKOFF;
-    lcd1602displayon();
-    lcd1602clear();
-    displaymode = LCD1602_ENTRYLEFT | LCD1602_ENTRYSHIFTDEC;
-    command(LCD1602_ENTRYMODESET | displaymode);
-    lcd1602home();
+    command(LCD1602_FUNCTIONSET | _displayfn);
+    lcddisplayon();
+    lcdclear();
+    command(LCD1602_ENTRYMODESET | _displaymode);
+    lcdhome();
 }
 
-void lcd1602clear()
+void lcdclear()
 {
     command(LCD1602_CLEARDISPLAY);
     delay_ms(2);
 }
 
-void lcd1602home()
+void lcdhome()
 {
     command(LCD1602_RETURNHOME);
     delay_ms(2);
 }
 
-// hardcoded for 16x2
-void lcd1602setcursor(unsigned char col, unsigned char row)
-{command(LCD1602_SETDDRAMADDR | col + row * 0x40);}
-
-void lcd1602displayon()
+// Supports 2 and 4 row displays.
+void lcdsetcursor(unsigned char col, unsigned char row)
 {
-    displayctrl != LCD1602_DISPLAYON;
-    command(LCD1602_DISPLAYCONTROL | displayctrl);
+    unsigned char addr = col;
+    if(_displayfn & LCD1602_2LINE)
+        switch(row) {
+            case 3:
+                addr += 0x54;
+                break;
+            case 2:
+                addr += 0x14;
+                break;
+            case 1:
+                addr += 0x40;
+                break;
+            default:
+                break;
+            }
+
+    command(LCD1602_SETDDRAMADDR | addr);
 }
 
-void lcd1602displayoff()
+void lcddisplayon()
 {
-    displayctrl &= ~LCD1602_DISPLAYON;
-    command(LCD1602_DISPLAYCONTROL | displayctrl);
+    _displayctrl != LCD1602_DISPLAYON;
+    command(LCD1602_DISPLAYCONTROL | _displayctrl);
 }
 
-void lcd1602cursoron()
+void lcddisplayoff()
 {
-    displayctrl |= LCD1602_CURSORON;
-    command(LCD1602_DISPLAYCONTROL | displayctrl);
+    _displayctrl &= ~LCD1602_DISPLAYON;
+    command(LCD1602_DISPLAYCONTROL | _displayctrl);
 }
 
-void lcd1602cursoroff()
+void lcdcursoron()
 {
-    displayctrl &= ~LCD1602_CURSORON;
-    command(LCD1602_DISPLAYCONTROL | displayctrl);
+    _displayctrl |= LCD1602_CURSORON;
+    command(LCD1602_DISPLAYCONTROL | _displayctrl);
 }
 
-void lcd1602backlighton()
+void lcdcursoroff()
 {
-    backlight = LCD1602_BACKLIGHT;
+    _displayctrl &= ~LCD1602_CURSORON;
+    command(LCD1602_DISPLAYCONTROL | _displayctrl);
+}
+
+void lcdbacklighton()
+{
+    _backlight = LCD1602_BACKLIGHT;
     expanderwrite(0);
 }
 
-void lcd1602backlightoff()
+void lcdbacklightoff()
 {
-    backlight = LCD1602_NOBACKLIGHT;
+    _backlight = LCD1602_NOBACKLIGHT;
     expanderwrite(0);
 }
 
-void lcd1602write(unsigned char value)
+void lcdwrite(unsigned char value)
 {data(value);}
 
-void lcd1602writestring(unsigned char str[])
+void lcdwritestring(unsigned char str[])
 {
     unsigned int i = 0;
 

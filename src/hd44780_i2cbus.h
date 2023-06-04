@@ -23,7 +23,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
     Adapted to use the delay library in this repository to accommodate different
     crystal oscillator frequencies and the i2c protocol library.
 
-    Fixed functions lcd1602backlighton() and lcd1602backlightoff(), they were reversed.
+    Fixed functions lcdbacklighton() and lcdbacklightoff(), they were reversed.
 */
 
 // TODO: rename this file (and all references) to hd44780_i2c_pcf8574a.h.
@@ -64,7 +64,11 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
 
 // flags for function set
 #define LCD1602_4BITMODE        0x00
+////////////////////////////////////////////
+// Do *NOT* set the 8bitmode: the i2c module
+// does *NOT* support it.
 #define LCD1602_8BITMODE        0x10
+////////////////////////////////////////////
 
 #define LCD1602_1LINE           0x00
 #define LCD1602_2LINE           0x08
@@ -80,13 +84,18 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
 #define Rw                      0x02 // Read/Write bit
 #define En                      0x04 // Enable bit
 
-extern void lcd1602init();
-extern void lcd1602clear();
-extern void lcd1602home();
-extern void lcd1602setcursor(unsigned char col, unsigned char row);
-extern void lcd1602displayon();
-extern void lcd1602displayoff();
-extern void lcd1602cursoron();
-extern void lcd1602cursoroff();
-extern void lcd1602write(unsigned char c);
-extern void lcd1602writestring(unsigned char str[]);
+// Example: 4bit mode, 40 pixel character, 2 lines, backlight on, no cursor, no blinking, western left-to-right, automatic increment of the character positioning.
+// displayfn    = LCD1602_4BITMODE  | LCD1602_2LINE         | LCD1602_5x8DOTS;
+// displayctrl  = LCD1602_DISPLAYON | LCD1602_CURSOROFF     | LCD1602_BLINKOFF;
+// displaymode  = LCD1602_ENTRYLEFT | LCD1602_ENTRYSHIFTDEC;
+// backlight    = LCD1602_BACKLIGHT
+extern void lcdinit(unsigned char displayfn, unsigned char displayctrl, unsigned char displaymode, unsigned char backlight);
+extern void lcdclear();
+extern void lcdhome();
+extern void lcdsetcursor(unsigned char col, unsigned char row);
+extern void lcddisplayon();
+extern void lcddisplayoff();
+extern void lcdcursoron();
+extern void lcdcursoroff();
+extern void lcdwrite(unsigned char c);
+extern void lcdwritestring(unsigned char str[]);

@@ -9,9 +9,9 @@ sdcc_build_hex: main_lcd1602.c
 	sdar -rc delay.lib delay.rel
 	sdcc -I . -I ../src/ -c ../src/i2c.c
 	sdar -rc i2c.lib i2c.rel
-	sdcc -I . -I ../src/ -c ../src/lcd1602.c
-	sdar -rc lcd1602.lib lcd1602.rel
-	sdcc -I . -I ../src/ main_lcd1602.c delay.lib i2c.lib lcd1602.lib -L delay.lib i2c.lib lcd1602.lib
+	sdcc -I . -I ../src/ -c ../src/hd44780_i2cbus.c
+	sdar -rc hd44780_i2cbus.lib hd44780_i2cbus.rel
+	sdcc -I . -I ../src/ main_lcd1602.c delay.lib i2c.lib hd44780_i2cbus.lib -L delay.lib i2c.lib hd44780_i2cbus.lib
 	packihx main_lcd1602.ihx > main_lcd1602.hex
 
 # Change here the USB port of your setup.

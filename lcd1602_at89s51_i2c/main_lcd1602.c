@@ -1,30 +1,35 @@
 #include "delay.h"
-#include "lcd1602.h"
+#include "hd44780_i2cbus.h"
 
 void main(void)
 {
-    lcd1602init();
+    lcdinit(
+        LCD1602_4BITMODE  | LCD1602_2LINE           | LCD1602_5x8DOTS,
+        LCD1602_DISPLAYON | LCD1602_CURSOROFF       | LCD1602_BLINKOFF,
+        LCD1602_ENTRYLEFT | LCD1602_ENTRYSHIFTDEC,
+        LCD1602_BACKLIGHT
+        );
     while(1)
     {
-        lcd1602writestring("ABCDEFGHIJKLMNOP");
-        lcd1602setcursor(0, 1);
-        lcd1602writestring("QRSTUVXWYZabcdef");
+        lcdwritestring("ABCDEFGHIJKLMNOP");
+        lcdsetcursor(0, 1);
+        lcdwritestring("QRSTUVXWYZabcdef");
         delay_ms(2000);
-        lcd1602home();
-        lcd1602writestring("ghijklmnopqrstuv");
-        lcd1602setcursor(0, 1);
-        lcd1602writestring("xwyz1234567890.,");
+        lcdhome();
+        lcdwritestring("ghijklmnopqrstuv");
+        lcdsetcursor(0, 1);
+        lcdwritestring("xwyz1234567890.,");
         delay_ms(2000);
-        lcd1602home();
-        lcd1602writestring("-></\\|!?()=+@#$&");
-        lcd1602setcursor(0, 1);
-        lcd1602writestring("*_");
+        lcdhome();
+        lcdwritestring("-></\\|!?()=+@#$&");
+        lcdsetcursor(0, 1);
+        lcdwritestring("*_");
         delay_ms(2000);
         for(unsigned int i = 0; i<14; i++)
         {
-            lcd1602write('.');
+            lcdwrite('.');
             delay_ms(250);
         }
-        lcd1602home();
+        lcdhome();
     }
 }
