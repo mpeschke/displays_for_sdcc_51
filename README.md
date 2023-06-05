@@ -4,14 +4,15 @@ Original code forked from https://github.com/apachiww/hd44780_for_sdcc_51. Quoti
 
 The original repository aimed to be a common library for many different LCD displays (0801, 0802, 1601, 1602, 2004, Noritake CU20045). This fork focus on specific LCD *circuit modules*, e.g.:  
 
-1. The LCD 1602A, version 3, with 4/8 bit interface.
-2. The LCD 1602A, version 3, with I2C interface.  
+1. The LCD 1602A (16 cols / 2 rows), version 3.0, with 4/8 bit interface.
+2. The LCD 1602A (16 cols / 2 rows), version 3.0, with I2C interface.  
+3. The LCD 2004A (20 cols / 4 rows), version 1.3, with I2C interface.
 
-There is little to no modifications to the original source code. The actual purpose of this fork is to:  
+There is little to no modification in the original source code. The actual purpose of this fork is to:  
 
 1. Provide more testing (particularly the LCD initialization delay functions).  
 2. Validate different hardware interfaces (4 bits, 8 bits and I2C communication).  
-3. Offer better build and deploy automation, using Makefiles and avrdude and flash programmers.  
+3. Offer better build and deploy automation, using avrdude (via Make) or flash programmers.  
 4. Offer better structured header and source files, so there is no need to manually copy the source file for the different interfaces.  
 5. Provide PCB schematics to build 8051-based development boards (TBD - in another git repository).  
 
@@ -81,6 +82,53 @@ Available at https://upverter.com/design/mpeschke/917442ed3dc5514a/at89s51-hd447
 ![](images/lcd1602_at89s51_4pinbus_extrom_burnrom_batronix.jpg)  
 
 Remove the EEPROM from the Flash Programmer and place it in its [circuit](#external-eeprom-4-bit-circuit-configuration).  
+
+## [lcd1602_at89s51_i2c](lcd1602_at89s51_i2c)
+
+This circuit is an example of LCD 1602A I2C interface, but code is accessed from an external EEPROM.  
+
+### External EEPROM 1602 I2C Circuit Configuration
+
+![](images/lcd1602_at89s51_i2c.jpg)  
+![](images/lcd1602_at89s51_i2c_schematic.jpg)  
+Available at https://upverter.com/design/mpeschke/b59b54c142cb2a9b/at89s51-hd44780-i2c/   
+
+> Usage:
+>
+> 1. Get your hands on a Flash Programmer. The Batronix Barlino II was used for this project.  
+>
+> 2. From a terminal, run the commands:
+> 
+> 3. cd [lcd1602_at89s51_i2c](lcd1602_at89s51_i2c/)
+>
+> 4. make build_hex
+>
+> 5. Follow your Flash Programmer instructions to flash the [lcd1602_at89s51_i2c/main_lcd1602.hex](lcd1602_at89s51_i2c/main_lcd1602.hex) into the EEPROM chip.  
+
+Remove the EEPROM from the Flash Programmer and place it in its [circuit](#external-eeprom-1602-i2c-circuit-configuration).  
+
+## [lcd2004_at89s51_i2c](lcd2004_at89s51_i2c)
+
+This circuit is an example of LCD 2004A I2C interface, but code is accessed from an external EEPROM.  
+Schematics and pin out are identical to the [1602 circuit](images/lcd1602_at89s51_i2c_schematic.jpg), as both offer the same I2C interface.  
+
+### External EEPROM 2004 I2C Circuit Configuration
+
+![](images/lcd2004_at89s51_i2c.jpg)  
+
+> Usage:
+>
+> 1. Get your hands on a Flash Programmer. The Batronix Barlino II was used for this project.  
+>
+> 2. From a terminal, run the commands:
+> 
+> 3. cd [lcd2004_at89s51_i2c](lcd2004_at89s51_i2c/)
+>
+> 4. make build_hex
+>
+> 5. Follow your Flash Programmer instructions to flash the [lcd2004_at89s51_i2c/main_lcd2004.hex](lcd2004_at89s51_i2c/main_lcd2004.hex) into the EEPROM chip.  
+
+Remove the EEPROM from the Flash Programmer and place it in its [circuit](#external-eeprom-2004-i2c-circuit-configuration).  
 
 ## [lcd1602_led_test](lcd1602_led_test)
 
