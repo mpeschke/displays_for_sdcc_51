@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "name": "Mac",
+            "name": "sdcc-Mac",
             "includePath": [
                 "${workspaceFolder}/**",
                 "/usr/local/Cellar/sdcc/4.2.0/share/sdcc/include/**",
@@ -15,6 +15,20 @@
             "cStandard": "c99",
             "cppStandard": "c++17",
             "intelliSenseMode": "macos-clang-x64",
+            "configurationProvider": "ms-vscode.makefile-tools"
+        },
+        {
+            "name": "sdcc-Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/usr/share/sdcc/include/mcs51/**",
+                "/usr/share/sdcc/include/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/sdcc",
+            "cStandard": "c99",
+            "cppStandard": "c++11",
+            "intelliSenseMode": "linux-gcc-x64",
             "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],
