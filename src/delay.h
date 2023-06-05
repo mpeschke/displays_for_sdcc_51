@@ -10,6 +10,14 @@
 // automatically calculate the MCU cycles.
 #define DELAY_10_TIMES_US(x) delay_x10_cycles(CYCLES_PER_US(x))
 
+#define INST_CYCLE_NS (MCU_CYCLE*(1000000000/XTAL_FREQ))
+
+#if INST_CYCLE_NS < 501
+#define FAST_MCU
+#define FN_DELAYT_W_EH  DELAY_10_TIMES_US(1)
+#define FN_DELAYT_W_END DELAY_10_TIMES_US(1)
+#endif
+
 extern void delay_x10_cycles(uint8_t x10cycles);
 extern void delay_x100_cycles(uint8_t x100cycles);
 extern void delay_ms(uint16_t ms);

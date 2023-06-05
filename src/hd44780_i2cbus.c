@@ -20,8 +20,6 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
 #include "hd44780_i2cbus.h"
 #include "i2c.h"
 
-// TODO: Implement delays during R/W for fast crystal oscillators (see src/hd44780_pinbus.c)
-
 static unsigned char _displayfn =    LCD1602_4BITMODE    | LCD1602_1LINE     | LCD1602_5x8DOTS;
 static unsigned char _displayctrl =  LCD1602_DISPLAYON   | LCD1602_CURSOROFF | LCD1602_BLINKOFF;
 static unsigned char _displaymode =  LCD1602_ENTRYLEFT   | LCD1602_ENTRYSHIFTDEC;
@@ -38,7 +36,13 @@ static void expanderwrite(unsigned char value)
 inline void pulseenable(unsigned char value)
 {
     expanderwrite(value | En);
+#ifdef FAST_MCU
+    FN_DELAYT_W_EH;
+#endif
     expanderwrite(value | ~En);
+#ifdef FAST_MCU
+    FN_DELAYT_W_END;
+#endif
 }
 
 static void write4bits(unsigned char value)
