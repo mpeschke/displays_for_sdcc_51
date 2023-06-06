@@ -51,6 +51,48 @@ static void write4bits(unsigned char value)
     pulseenable(value);
 }
 
+#ifdef LCD_READ_ENABLED
+void lcdwaitforbusyflag()
+{
+                                                    // See HD44780U manual, page 24.
+                                                    // BL = Backlight
+                                                    // P7 P6 P5 P4 P3 EN RW RS
+    static const unsigned char READ_EN_RISE = 0xF6; // 1  1  1  1  BL 1  1  0
+    static const unsigned char READ_EN_FALL = 0xF2; // 1  1  1  1  BL 0  1  0
+    unsigned char add = 0x00;
+
+    // Bit banging, following the instructions in the HD44780U manual, page 33.
+    while(add & BF)
+    {
+        write4bits(READ_EN_FALL);
+#ifdef FAST_MCU
+        FN_DELAYT_R_RS2E;
+#endif
+        add = (i2cread() >> 7);
+        write4bits(READ_EN_RISE);
+#ifdef FAST_MCU
+        FN_DELAYT_R_E2D;
+#endif
+        add = (i2cread() >> 7);
+        write4bits(READ_EN_FALL);
+#ifdef FAST_MCU
+        FN_DELAYT_R_END;
+#endif
+        add = (i2cread() >> 7);
+        write4bits(READ_EN_RISE);
+#ifdef FAST_MCU
+        FN_DELAYT_R_E2D;
+#endif
+        add = (i2cread() >> 7);
+        write4bits(READ_EN_FALL);
+#ifdef FAST_MCU
+        FN_DELAYT_R_END;
+#endif
+        add = (i2cread() >> 7);
+    }
+}
+#endif
+
 static void command(unsigned char value)
 {
     write4bits(value & 0xf0);
@@ -86,8 +128,12 @@ void lcdinit(
     // > 4.1 ms
     delay_ms(5);
     write4bits(0x03 << 4);
+#ifdef LCD_READ_ENABLED
+    lcdwaitforbusyflag();
+#else
     // > 150 us
     DELAY_10_TIMES_US(16); // 160 us
+#endif
     write4bits(0x02 << 4);
 
     command(LCD1602_FUNCTIONSET | _displayfn);
@@ -100,13 +146,21 @@ void lcdinit(
 void lcdclear()
 {
     command(LCD1602_CLEARDISPLAY);
+#ifdef LCD_READ_ENABLED
+    lcdwaitforbusyflag();
+#else
     delay_ms(2);
+#endif
 }
 
 void lcdhome()
 {
     command(LCD1602_RETURNHOME);
+#ifdef LCD_READ_ENABLED
+    lcdwaitforbusyflag();
+#else
     delay_ms(2);
+#endif
 }
 
 // Supports 2 and 4 row displays.
