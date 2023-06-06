@@ -94,7 +94,9 @@ __endasm;
 // (12       MHz) = (5+X)*(1000000÷(12000000÷12))=5 -> 5+X=5                      -> X=0
 // (16       MHz) = (5+X)*(1000000÷(16000000÷12))=5 -> 3.75+0.75X=5               -> X=1.666666667 (round to 2)
 // (18432000  Hz) = (5+X)*(1000000÷(18432000÷12))=5 -> 3.255208333+0.651041667X=5 -> X=2.679999999 (round to 3)
+// (20       MHz) = (5+X)*(1000000÷(20000000÷12))=5 -> 3.5+0.6X=5                 -> X=2.5         (round to 3)
 // (22118400  Hz) = (5+X)*(1000000÷(22118400÷12))=5 -> 2.71267361+0.542534722X=5  -> X=4.216000004 (round to 5)
+// (24       MHz) = (5+X)*(1000000÷(24000000÷12))=5 -> 2.5+0.5X=5                 -> X=5
 // (25       MHz) = (5+X)*(1000000÷(25000000÷12))=5 -> 2.4+0.48X=5                -> X=5.416666667 (round to 6)
 void delay_5us() __naked       // 2 cycle instruction (lcall _delay5us)
 {
@@ -102,13 +104,13 @@ __asm__("nop");                // 1 cycle instruction (nop)
 #if XTAL_FREQ == 16000000      // X=1.666666667 (round to 2)
 __asm__("nop");                // 1 cycle instruction
 __asm__("nop");                // 1 cycle instruction
-#endif
-#if XTAL_FREQ == 18432000      // X=2.679999999 (round to 3)
+#endif                         // X=2.679999999 (round to 3)
+#if XTAL_FREQ == 18432000 || XTAL_FREQ == 20000000
 __asm__("nop");                // 1 cycle instruction
 __asm__("nop");                // 1 cycle instruction
 __asm__("nop");                // 1 cycle instruction
-#endif
-#if XTAL_FREQ == 22118400      // X=4.216000004 (round to 5)
+#endif                         // X=4.216000004 (round to 5)
+#if XTAL_FREQ == 22118400 || XTAL_FREQ == 24000000
 __asm__("nop");                // 1 cycle instruction
 __asm__("nop");                // 1 cycle instruction
 __asm__("nop");                // 1 cycle instruction

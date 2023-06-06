@@ -14,8 +14,15 @@
 
 #if INST_CYCLE_NS < 501
 #define FAST_MCU
-#define FN_DELAYT_W_EH  DELAY_10_TIMES_US(1)
-#define FN_DELAYT_W_END DELAY_10_TIMES_US(1)
+// A 10 us value seems to be adequate for all these delays,
+// contrary to what's implemented in the original hd44780_pinbus.h.
+// For fast MCUs those delays appear to be all equal to lcd_wait_2t(1)... ¯\_(ツ)_/¯
+// Keeping the original names here for future reference though.
+#define FN_DELAYT_W_EH   DELAY_10_TIMES_US(1)
+#define FN_DELAYT_W_END  DELAY_10_TIMES_US(1)
+#define FN_DELAYT_R_RS2E DELAY_10_TIMES_US(1)
+#define FN_DELAYT_R_E2D  DELAY_10_TIMES_US(1)
+#define FN_DELAYT_R_END  DELAY_10_TIMES_US(1)
 #endif
 
 extern void delay_x10_cycles(uint8_t x10cycles);
