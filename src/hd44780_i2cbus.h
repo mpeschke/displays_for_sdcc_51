@@ -84,7 +84,11 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
 #define Rw                      0x02 // Read/Write bit
 #define En                      0x04 // Enable bit
 
+///////////////////////////////////////////////////////////////
+// Uncomment to use delays instead of Busy Flag check mechanism
 #define LCD_READ_ENABLED
+///////////////////////////////////////////////////////////////
+
 #ifdef LCD_READ_ENABLED
 #define BF                      0x01
 #endif
