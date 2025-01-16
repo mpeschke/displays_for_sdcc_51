@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "8051.h": "c",
-        "at89x51.h": "c"
+        "at89x51.h": "c",
+        "ssd1306_i2cbus.h": "c"
     }
 }

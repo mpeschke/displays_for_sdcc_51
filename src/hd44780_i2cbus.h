@@ -24,9 +24,11 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
     crystal oscillator frequencies and the i2c protocol library.
 
     Fixed functions lcdbacklighton() and lcdbacklightoff(), they were reversed.
-*/
 
-// TODO: rename this file (and all references) to hd44780_i2c_pcf8574a.h.
+    Check this implementation to see if it's possible to support OLED displays with the current code:
+    https://github.com/ExploreEmbedded/8051_DevelopmentBoard/blob/master/Code/Keil_Sample_Codes/00-libfiles/oled_i2c.h
+    https://github.com/ExploreEmbedded/8051_DevelopmentBoard/blob/master/Code/Keil_Sample_Codes/00-libfiles/oled_i2c.c
+*/
 
 // commands
 #define LCD1602_CLEARDISPLAY    0x01
