@@ -168,7 +168,8 @@ void OLED_Init(void)
     oledSendCommand(SSD1306_SET_DISPLAY_CLOCK_DIV_RATIO);
     oledSendCommand(0x80);
     oledSendCommand(SSD1306_SET_MULTIPLEX_RATIO);
-    oledSendCommand(0x3F);
+    // Depends on the SSD1306 module used
+    oledSendCommand(SSD1306_SET_MULTIPLEX_RATIO_VALUE);
     oledSendCommand(SSD1306_SET_DISPLAY_OFFSET);
     oledSendCommand(0x0);
     oledSendCommand(SSD1306_SET_START_LINE | 0x0);
@@ -179,7 +180,8 @@ void OLED_Init(void)
     oledSendCommand(SSD1306_SET_SEGMENT_REMAP | 0x1);
     oledSendCommand(SSD1306_COM_SCAN_DIR_DEC);
     oledSendCommand(SSD1306_SET_COM_PINS);
-    oledSendCommand(0x12);
+    // Depends on the SSD1306 module used.
+    oledSendCommand(SSD1306_SET_COM_PINS_VALUE);
     oledSendCommand(SSD1306_SET_CONTRAST_CONTROL);
     oledSendCommand(0xCF);
     oledSendCommand(SSD1306_SET_PRECHARGE_PERIOD);
