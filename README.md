@@ -1,8 +1,8 @@
-# HD44780 library for sdcc targeting 8051 Intel-based Microntrollers
+# Display library for sdcc targeting 8051 Intel-based microcontrollers
 
 Original code forked from https://github.com/apachiww/hd44780_for_sdcc_51. Quoting: *"(a library) suitable for 8051 based MCUs with various crystals and instruction cycles (1T, 6T, 12T) as AUTOMATIC delay calculation is available."*   
 
-The original repository aimed to be a common library for many different LCD displays (0801, 0802, 1601, 1602, 2004, Noritake CU20045). This fork focus on specific LCD *circuit modules*, e.g.:  
+The original repository aimed to be a common library for many different Hitachi LCD displays (0801, 0802, 1601, 1602, 2004, Noritake CU20045). This fork focus on specific LCD *circuit modules* that use the Hitachi HD44780 display chip (and variations), e.g.:  
 
 1. The LCD 1602A (16 cols / 2 rows), version 3.0, with 4/8 bit interface.
 2. The LCD 1602A (16 cols / 2 rows), version 3.0, with I2C interface.  
@@ -17,6 +17,19 @@ There is little to no modification in the original source code. The actual purpo
 5. Provide PCB schematics to build 8051-based development boards (TBD - in another git repository).  
 
 Projects were tested on an Atmel AT89S51, although others are theoretically supported - see [conf/AT89S5x.conf](conf/AT89S5x.conf). A configuration using an external EEPROM was set to test possible performance impact in the LCD initialization delay functions.  
+
+During development, other displays were tested, notably OLED *circuit modules* based on the SSD1306 display chip. So this git project has been expanded and renamed to include the list below:
+
+1. The OLED SSD1306 (128 cols / 32 rows), JMD 0.91A model, with I2C interface.
+2. The OLED SSD1306 (128 cols / 64 rows), JMD 0.96A-2 model, with I2C interface.
+
+![](images/JMD091A_front.jpg)  
+![](images/JMD091A_back.jpg)  
+![](images/JMD096A_2_front.jpg)  
+![](images/JMD096A_2_back.jpg)  
+
+
+These OLED display chips pack graphic features, but for this project only text functions were implemented or tested.  
 
 # Build and Deploy
 
@@ -129,6 +142,52 @@ Schematics and pin out are identical to the [1602 circuit](images/lcd1602_at89s5
 > 5. Follow your Flash Programmer instructions to flash the [lcd2004_at89s51_i2c/main_lcd2004.hex](lcd2004_at89s51_i2c/main_lcd2004.hex) into the EEPROM chip.  
 
 Remove the EEPROM from the Flash Programmer and place it in its [circuit](#external-eeprom-2004-i2c-circuit-configuration).  
+
+## [ssd1306_128_32_i2c](ssd1306_128_32_i2c)
+
+This circuit is an example using the SSD1306 I2C module (128x32), but code is accessed from an external EEPROM.  
+Schematics and pin out are identical to the [1602 circuit](images/lcd1602_at89s51_i2c_schematic.jpg), connecting the module's i2c pins to the microcontroller's exact same ports.  
+
+### External EEPROM SSD1306 128x32 I2C Circuit Configuration
+
+![](images/ssd1306_128_32_i2c.jpg)  
+
+> Usage:
+>
+> 1. Get your hands on a Flash Programmer. The Batronix Barlino II was used for this project.  
+>
+> 2. From a terminal, run the commands:
+> 
+> 3. cd [ssd1306_128_32_i2c](ssd1306_128_32_i2c/)
+>
+> 4. make build_hex
+>
+> 5. Follow your Flash Programmer instructions to flash the [ssd1306_128_32_i2c/main_ssd1306.hex](ssd1306_128_32_i2c/main_ssd1306.hex) into the EEPROM chip.  
+
+Remove the EEPROM from the Flash Programmer and place it in its [circuit](#external-eeprom-ssd1306-128x32-i2c-circuit-configuration).  
+
+## [ssd1306_128_64_i2c](ssd1306_128_64_i2c)
+
+This circuit is an example using the SSD1306 I2C module (128x64), but code is accessed from an external EEPROM.  
+Schematics and pin out are identical to the [1602 circuit](images/lcd1602_at89s51_i2c_schematic.jpg), connecting the module's i2c pins to the microcontroller's exact same ports.  
+
+### External EEPROM SSD1306 128x64 I2C Circuit Configuration
+
+![](images/ssd1306_128_64_i2c.jpg)  
+
+> Usage:
+>
+> 1. Get your hands on a Flash Programmer. The Batronix Barlino II was used for this project.  
+>
+> 2. From a terminal, run the commands:
+> 
+> 3. cd [ssd1306_128_64_i2c](ssd1306_128_64_i2c/)
+>
+> 4. make build_hex
+>
+> 5. Follow your Flash Programmer instructions to flash the [ssd1306_128_64_i2c/main_ssd1306.hex](ssd1306_128_64_i2c/main_ssd1306.hex) into the EEPROM chip.  
+
+Remove the EEPROM from the Flash Programmer and place it in its [circuit](#external-eeprom-ssd1306-128x64-i2c-circuit-configuration).  
 
 ## [lcd1602_led_test](lcd1602_led_test)
 
